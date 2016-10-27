@@ -19,6 +19,22 @@ RUN INSTALL_PKGS="rh-ruby22 rh-ruby22-ruby-devel rh-ruby22-rubygem-rake v8314 rh
     yum install -y --setopt=tsflags=nodocs  $INSTALL_PKGS && rpm -V $INSTALL_PKGS && \
     yum clean all -y
 
+
+#Upload AIM files
+RUN mkdir /tmp/aim
+ADD /root/provider/* /tmp/aim/
+
+#Run AIM tasks
+RUN unalias cp \
+    mkdir /JavaBB \
+    cp /tmp/aim/aimparms.sample /var/tmp/aimparms \
+    rpm -i /tmp/aim/CARKaim-9.70.0.3.x86_64.rpm \
+    cp /tmp/aim/JavaBB/* /JavaBB/ \
+    yum install -y python-setuptools \
+    easy_install supervisor
+    
+    
+
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH
 
